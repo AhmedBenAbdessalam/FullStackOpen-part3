@@ -1,9 +1,21 @@
 const express = require('express')
+const morgan = require('morgan')
 
 const app = express()
-
 //add middleware
 app.use(express.json())
+
+app.use(morgan((tokens, req, res) =>
+  [tokens.method(req, res),
+  tokens.url(req, res),
+  tokens.status(req, res),
+  tokens.res(req, res, 'content-length'), '-',
+  tokens['response-time'](req, res), 'ms',
+  JSON.stringify(req.body)
+  ].join(' ')
+))
+
+
 
 let persons = [
   {
@@ -55,15 +67,14 @@ app.delete('/api/persons/:id', (request, response) => {
 })
 app.post('/api/persons', (request, response) => {
   const body = request.body
-  console.log(body)
   if (!body.name) {
-    response.status(400).json({ "error": "name missing" })
+    response.status(400).json({ error: "name missing" })
   }
   else if (!body.number) {
-    response.status(400).json({ "error": "number missing" })
+    response.status(400).json({ error: "number missing" })
   }
   else if (persons.find(person => person.name === body.name)) {
-    response.status(400).json({ "error": "name already exist" })
+    response.status(400).json({ error: "name already exist" })
   }
   else {
     const person = {
@@ -76,6 +87,10 @@ app.post('/api/persons', (request, response) => {
   }
 })
 
+const unknownEndpoint = (request, response) => {
+  response.status(404).send({ error: 'unknown endpoint' })
+}
+app.use(unknownEndpoint)
 
 const PORT = 3001
 app.listen(PORT, () => {
