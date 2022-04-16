@@ -4,6 +4,7 @@ const cors = require('cors')
 
 const app = express()
 //add middleware
+app.use(express.static('build'))
 app.use(cors())
 app.use(express.json())
 
