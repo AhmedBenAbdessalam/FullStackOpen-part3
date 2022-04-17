@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 require('dotenv').config()
 const express = require('express')
 const morgan = require('morgan')
@@ -12,11 +13,11 @@ app.use(express.json())
 
 app.use(morgan((tokens, req, res) =>
   [tokens.method(req, res),
-  tokens.url(req, res),
-  tokens.status(req, res),
-  tokens.res(req, res, 'content-length'), '-',
-  tokens['response-time'](req, res), 'ms',
-  JSON.stringify(req.body)
+    tokens.url(req, res),
+    tokens.status(req, res),
+    tokens.res(req, res, 'content-length'), '-',
+    tokens['response-time'](req, res), 'ms',
+    JSON.stringify(req.body)
   ].join(' ')
 ))
 
@@ -55,14 +56,14 @@ app.put('/api/persons/:id', (request, response, next) => {
 
 app.delete('/api/persons/:id', (request, response, next) => {
   Person.findByIdAndDelete(request.params.id)
-    .then(result => response.status(204).end())
+    .then(() => response.status(204).end())
     .catch(error => next(error))
 })
 app.post('/api/persons', (request, response, next) => {
   const body = request.body
   const person = Person({
-    "name": body.name,
-    "number": body.number
+    'name': body.name,
+    'number': body.number
   })
   person.save().then(savedPerson => response.json(savedPerson)).catch(error => next(error))
 
@@ -90,6 +91,6 @@ app.use(errorHandler)
 
 const PORT = process.env.PORT
 app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
+  console.log(`Server running on port ${PORT}`)
 })
 

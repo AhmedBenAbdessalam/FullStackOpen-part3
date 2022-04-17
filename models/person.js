@@ -1,17 +1,18 @@
+/* eslint-disable no-undef */
 const mongoose = require('mongoose')
 const url = process.env.MONGODB_URI
-console.log('connecting to', url);
-mongoose.connect(url).then(result => {
+console.log('connecting to', url)
+mongoose.connect(url).then(() => {
   console.log('connected to MongoDB')
 }).catch(error => console.log('error connecting to MongoDB:', error.messsage))
 
 const personSchema = new mongoose.Schema({
-  "name": {
+  'name': {
     type: String,
     minLength: 3,
     required: true
   },
-  "number": {
+  'number': {
     type: String,
     minLength: 8,
     validate: {
